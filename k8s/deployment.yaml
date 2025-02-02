@@ -1,0 +1,93 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: serv-print-efgi
+  labels:
+    app: serv-print-efgi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: serv-print-efgi
+  template:
+    metadata:
+      labels:
+        app: serv-print-efgi
+    spec:
+      containers:
+      - name: serv-print-efgi
+        image: gimmyhat/serv-print-efgi:20250202-154616
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8005
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8005
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          timeoutSeconds: 10
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8005
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        volumeMounts:
+        - name: temp-storage
+          mountPath: /app/temp
+        env:
+        - name: TZ
+          value: "Europe/Moscow"
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: TMPDIR
+          value: "/app/temp"
+        - name: LIBREOFFICE_PATH
+          value: "/usr/bin/soffice"
+        - name: SAL_USE_VCLPLUGIN
+          value: "svp"
+        - name: LOG_LEVEL
+          value: "INFO"
+        - name: ENVIRONMENT
+          value: "production"
+        - name: ENABLE_METRICS
+          value: "true"
+        - name: RELOAD_APP
+          value: "false"
+        - name: PROMETHEUS_MULTIPROC_DIR
+          value: "/tmp"
+        - name: prometheus_multiproc_dir
+          value: "/tmp"
+      volumes:
+      - name: temp-storage
+        emptyDir:
+          sizeLimit: "1Gi" 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,18 @@
+﻿global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'pdf-service-test'
+    static_configs:
+      - targets: ['172.27.239.23:31005', '172.27.239.31:31005', '172.27.239.32:31005']
+        labels:
+          env: test
+          instance: test-cluster
+
+  - job_name: 'pdf-service-prod'
+    static_configs:
+      - targets: ['172.27.239.6:31005', '172.27.239.15:31005']
+        labels:
+          env: prod
+          instance: prod-cluster

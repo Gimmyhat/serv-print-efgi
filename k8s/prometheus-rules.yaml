@@ -1,0 +1,72 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: serv-print-efgi-alerts
+  labels:
+    app: serv-print-efgi
+    prometheus: k8s
+    role: alert-rules
+spec:
+  groups:
+  - name: serv-print-efgi.rules
+    rules:
+    # Алерт на высокий уровень ошибок
+    - alert: HighErrorRate
+      expr: |
+        sum(rate(http_requests_total{status=~"5..",app="serv-print-efgi"}[5m]))
+        /
+        sum(rate(http_requests_total{app="serv-print-efgi"}[5m])) > 0.1
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: High error rate detected
+        description: "Error rate is above 10% for the last 5 minutes"
+
+    # Алерт на ошибки конвертации PDF
+    - alert: PDFConversionErrors
+      expr: |
+        increase(pdf_conversion_errors_total{app="serv-print-efgi"}[15m]) > 3
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: Multiple PDF conversion errors
+        description: "More than 3 PDF conversion errors in the last 15 minutes"
+
+    # Алерт на большое количество временных файлов
+    - alert: HighTempFileCount
+      expr: |
+        temp_files_count{app="serv-print-efgi"} > 1000
+      for: 15m
+      labels:
+        severity: warning
+      annotations:
+        summary: High number of temporary files
+        description: "More than 1000 temporary files detected"
+
+    # Алерт на использование памяти
+    - alert: HighMemoryUsage
+      expr: |
+        container_memory_usage_bytes{container="serv-print-efgi"} 
+        / 
+        container_spec_memory_limit_bytes{container="serv-print-efgi"} > 0.85
+      for: 15m
+      labels:
+        severity: warning
+      annotations:
+        summary: High memory usage
+        description: "Memory usage is above 85% for 15 minutes"
+
+    # Алерт на большие запросы
+    - alert: LargeRequestsDetected
+      expr: |
+        rate(http_request_size_bytes_sum{app="serv-print-efgi"}[5m])
+        /
+        rate(http_request_size_bytes_count{app="serv-print-efgi"}[5m]) > 40000000
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: Large requests detected
+        description: "Average request size is above 40MB in the last 5 minutes" 

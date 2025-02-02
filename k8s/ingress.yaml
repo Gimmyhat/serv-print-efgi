@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: serv-print-efgi-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"  # Увеличиваем лимит размера тела запроса до 50 МБ
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"  # Таймаут соединения 10 минут
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"    # Таймаут отправки 10 минут
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"    # Таймаут чтения 10 минут
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "16k"     # Увеличиваем размер буфера
+    nginx.ingress.kubernetes.io/client-max-body-size: "50m"  # Максимальный размер тела запроса
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: serv-print-efgi
+            port:
+              number: 80 

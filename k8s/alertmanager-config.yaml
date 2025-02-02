@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: alertmanager-serv-print-efgi
+  labels:
+    app: serv-print-efgi
+type: Opaque
+stringData:
+  alertmanager.yaml: |-
+    global:
+      resolve_timeout: 5m
+
+    route:
+      group_by: ['alertname', 'severity']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 12h
+      receiver: 'telegram-notifications'
+      routes:
+      - match:
+          severity: critical
+        receiver: 'telegram-critical'
+        group_wait: 10s
+        repeat_interval: 1h
+
+    receivers:
+    - name: 'telegram-notifications'
+      telegram_configs:
+      - bot_token: '${TELEGRAM_BOT_TOKEN}'  # Будет подставлено из секрета
+        chat_id: ${TELEGRAM_CHAT_ID}  # Будет подставлено из секрета
+        parse_mode: 'HTML'
+        message: |
+          🔔 <b>{{ .CommonLabels.alertname }}</b>
+          
+          <b>Описание:</b> {{ .CommonAnnotations.description }}
+          <b>Важность:</b> {{ .CommonLabels.severity }}
+          <b>Статус:</b> {{ .Status }}
+          
+          {{ if eq .Status "firing" }}🔥 <b>Проблема активна</b>{{ else }}✅ <b>Проблема решена</b>{{ end }}
+
+    - name: 'telegram-critical'
+      telegram_configs:
+      - bot_token: '${TELEGRAM_BOT_TOKEN}'  # Будет подставлено из секрета
+        chat_id: ${TELEGRAM_CHAT_ID}  # Будет подставлено из секрета
+        parse_mode: 'HTML'
+        message: |
+          ❗️ <b>КРИТИЧЕСКАЯ ОШИБКА</b> ❗️
+          
+          🚨 <b>{{ .CommonLabels.alertname }}</b>
+          
+          <b>Описание:</b> {{ .CommonAnnotations.description }}
+          <b>Начало:</b> {{ .StartsAt }}
+          
+          {{ if eq .Status "firing" }}🔥 <b>Требует немедленного внимания!</b>{{ else }}✅ <b>Проблема решена</b>{{ end }} 

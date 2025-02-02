@@ -1,0 +1,113 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+log/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Docker
+.docker/
+
+# Kubernetes secrets
+k8s/*secret*.yaml
+k8s/*Secret*.yaml
+k8s/secrets/
+monitoring/prometheus/secrets/
+
+# Certificates and keys
+*.pem
+*.key
+*.crt
+*.cer
+*.der
+*.priv
+
+# Configuration files that might contain sensitive data
+config.local.yaml
+*config*.local.*
+*.local.env
+.env*
+
+# Test data and samples
+test/data/
+samples/
+example*.json
+test*.json
+
+# Template files with sensitive data
+templates/*
+!templates/README.md
+
+# Monitoring sensitive data
+monitoring/grafana/secrets/
+monitoring/prometheus/secrets/
+*password*
+*secret*
+*token*
+*credential*
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Local development
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+*.temp
+
+# Project specific
+result.pdf
+output.pdf
+*.docx
+!templates/*.docx
+temp/
+.pytest_cache/
+test_data.json
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Kubernetes
+kubeconfig
+*.kubeconfig 

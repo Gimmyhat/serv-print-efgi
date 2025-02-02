@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: serv-print-efgi
+  labels:
+    app: serv-print-efgi
+spec:
+  ports:
+  - port: 8005
+    targetPort: 8005
+    nodePort: 31005
+    name: http
+  selector:
+    app: serv-print-efgi
+  type: NodePort 

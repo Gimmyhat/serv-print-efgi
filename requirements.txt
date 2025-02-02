@@ -1,0 +1,8 @@
+fastapi>=0.100.0
+uvicorn>=0.23.0
+python-multipart
+docxtpl
+python-docx
+PyPDF2
+prometheus-client>=0.17.1
+prometheus-fastapi-instrumentator>=6.1.0

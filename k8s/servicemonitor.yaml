@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: serv-print-efgi-monitor
+  labels:
+    app: serv-print-efgi
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: serv-print-efgi
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 15s
+  namespaceSelector:
+    matchNames:
+    - default 

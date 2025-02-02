@@ -1,0 +1,60 @@
+# Пример конфигурационного файла
+# Скопируйте этот файл в config.local.yaml и заполните реальными данными
+
+# Настройки сервера
+server:
+  host: "0.0.0.0"
+  port: 8005
+  workers: 1
+  timeout: 300
+  backlog: 2048
+
+# Настройки LibreOffice
+libreoffice:
+  path: "/usr/bin/soffice"  # для Windows используйте "C:\\Program Files\\LibreOffice\\program\\soffice.exe"
+  timeout: 60
+  env:
+    SAL_USE_VCLPLUGIN: "svp"
+
+# Настройки логирования
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "json"  # text, json
+  file: "logs/app.log"
+
+# Настройки мониторинга
+monitoring:
+  prometheus:
+    enabled: true
+    port: 9090
+    metrics_path: "/metrics"
+  grafana:
+    enabled: true
+    port: 3000
+    admin_user: "admin"  # измените на реальные данные
+    admin_password: "admin"  # измените на реальные данные
+
+# Настройки Kubernetes (для production)
+kubernetes:
+  namespace: "default"
+  service:
+    name: "serv-print-efgi"
+    type: "NodePort"
+    port: 8005
+    node_port: 31005
+  ingress:
+    enabled: true
+    host: "example.com"  # измените на реальный домен
+    tls: true
+    class: "nginx"
+
+# Настройки безопасности
+security:
+  cors:
+    allowed_origins: ["*"]
+    allowed_methods: ["*"]
+    allowed_headers: ["*"]
+  rate_limit:
+    enabled: true
+    requests_per_minute: 60
+  max_request_size: 52428800  # 50MB в байтах 
